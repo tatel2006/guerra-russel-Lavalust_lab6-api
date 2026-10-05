@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 
 /**
@@ -16,41 +16,41 @@ class AuthController extends Controller
         $this->call->model('UserModel');
     }
 
+   
     // POST /api/login
-    public function login()
-    {
-        $this->api->rate_limit();
-        $body = $this->api->body();
+public function login()
+{
+    $this->api->rate_limit();
+    $body = $this->api->body();
 
-        $username = $body['username'] ?? '';
-        $password = $body['password'] ?? '';
+    $username = $body['username'] ?? '';
+    $password = $body['password'] ?? '';
 
-        $user = $this->UserModel->findByUsername($username); error_log("LOGIN DEBUG username=" . var_export($username, true) . " length=" . strlen($username) . " hex=" . bin2hex($username) . " user_found=" . ($user ? "YES" : "NO"));
+    $user = $this->UserModel->findByUsername($username);
 
-        if (!$user || !password_verify($password, $user['password'])) {
-            $this->api->respond_error('Invalid username or password.', 401);
-        }
-
-        if (!(int) $user['is_active']) {
-            $this->api->respond_error('This account is inactive.', 403);
-        }
-
-        $tokens = $this->api->issue_tokens([
-            'id'   => $user['id'],
-            'role' => $user['role'],
-        ]);
-
-        $this->api->respond([
-            'message' => 'Login successful.',
-            'user'    => [
-                'id'       => $user['id'],
-                'username' => $user['username'],
-                'role'     => $user['role'],
-            ],
-            'tokens' => $tokens,
-        ]);
+    if (!$user || !password_verify($password, $user['password'])) {
+        $this->api->respond_error('Invalid username or password.', 401);
     }
 
+    if (!(int) $user['is_active']) {
+        $this->api->respond_error('This account is inactive.', 403);
+    }
+
+    $tokens = $this->api->issue_tokens([
+        'id'   => $user['id'],
+        'role' => $user['role'],
+    ]);
+
+    $this->api->respond([
+        'message' => 'Login successful.',
+        'user'    => [
+            'id'       => $user['id'],
+            'username' => $user['username'],
+            'role'     => $user['role'],
+        ],
+        'tokens' => $tokens,
+    ]);
+}
     // POST /api/logout
     public function logout()
     {
