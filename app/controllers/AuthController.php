@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 
 /**
@@ -25,7 +25,7 @@ class AuthController extends Controller
         $username = $body['username'] ?? '';
         $password = $body['password'] ?? '';
 
-        $user = $this->UserModel->findByUsername($username);
+        $user = $this->UserModel->findByUsername($username); error_log("LOGIN DEBUG user_found=" . ($user ? "YES" : "NO") . " password_ok=" . (($user && password_verify($password, $user["password"])) ? "YES" : "NO"));
 
         if (!$user || !password_verify($password, $user['password'])) {
             $this->api->respond_error('Invalid username or password.', 401);
