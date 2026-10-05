@@ -25,7 +25,7 @@ class AuthController extends Controller
         $username = $body['username'] ?? '';
         $password = $body['password'] ?? '';
 
-        $user = $this->UserModel->findByUsername($username); $stmt = $this->db->raw("SELECT DATABASE() AS dbname, COUNT(*) AS user_count FROM users WHERE username = ?", [$username]); $dbg = $stmt->fetch(PDO::FETCH_ASSOC); error_log("LOGIN DEBUG db=" . ($dbg["dbname"] ?? "NULL") . " user_count=" . ($dbg["user_count"] ?? "NULL") . " user_found=" . ($user ? "YES" : "NO"));
+        $user = $this->UserModel->findByUsername($username); $stmt = $this->db->raw("SELECT DATABASE() AS dbname, @@hostname AS mysql_host, @@server_uuid AS server_uuid, COUNT(*) AS user_count FROM users WHERE username = ?", [$username]); $dbg = $stmt->fetch(PDO::FETCH_ASSOC); error_log("LOGIN DEBUG db=" . ($dbg["dbname"] ?? "NULL") . " mysql_host=" . ($dbg["mysql_host"] ?? "NULL") . " uuid=" . ($dbg["server_uuid"] ?? "NULL") . " user_count=" . ($dbg["user_count"] ?? "NULL"));
 
         if (!$user || !password_verify($password, $user['password'])) {
             $this->api->respond_error('Invalid username or password.', 401);
