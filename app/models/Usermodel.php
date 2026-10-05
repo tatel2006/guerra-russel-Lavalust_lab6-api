@@ -7,6 +7,9 @@ class UserModel extends Model
 
     public function findByUsername($username)
     {
-        return $this->db->table($this->table)->where('username', $username)->get();
+        return $this->db
+            ->table($this->table)
+            ->where('username', $username)
+            ->get();
     }
 }

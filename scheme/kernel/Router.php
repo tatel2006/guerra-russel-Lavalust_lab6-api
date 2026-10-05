@@ -436,11 +436,11 @@ class Router
         if (strpos($url, '/') !== 0) {
             $url = '/' . $url;
         }
-
         if ($method === 'OPTIONS') {
-            handle_cors();
-            http_response_code(204);
-            exit;
+        lava_instance()->config->load('api');
+        handle_cors();
+        http_response_code(204);
+        exit;
         }
 
         // Security check for permitted characters
