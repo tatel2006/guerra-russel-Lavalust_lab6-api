@@ -25,7 +25,7 @@ class AuthController extends Controller
         $username = $body['username'] ?? '';
         $password = $body['password'] ?? '';
 
-        $user = $this->UserModel->findByUsername($username); error_log("LOGIN DEBUG user_found=" . ($user ? "YES" : "NO") . " password_ok=" . (($user && password_verify($password, $user["password"])) ? "YES" : "NO"));
+        $user = $this->UserModel->findByUsername($username); error_log("LOGIN DEBUG DB_HOST=" . (getenv("DB_HOST") ?: "EMPTY") . " DB_NAME=" . (getenv("DB_NAME") ?: "EMPTY") . " DB_USER=" . (getenv("DB_USER") ?: "EMPTY") . " user_found=" . ($user ? "YES" : "NO"));
 
         if (!$user || !password_verify($password, $user['password'])) {
             $this->api->respond_error('Invalid username or password.', 401);
@@ -84,5 +84,6 @@ class AuthController extends Controller
         $this->api->respond(['user' => $payload]);
     }
 }
+
 
 
